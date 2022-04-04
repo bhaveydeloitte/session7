@@ -36,6 +36,7 @@ payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 				<file:write doc:name="Write_to_local" doc:id="ffda4233-7013-4ed5-af5f-888dc15950c7" config-ref="File_Config" path="C:\Users\BHAMALHOTRA\AnypointStudio\studio-workspace\session-7\fileTransferPractice\test\sql.txt" mode="APPEND"/>
+				<logger level="INFO" doc:name="Logger" doc:id="6a5db50d-4bbb-4d1e-a7e0-7b8c8741f05d" />
 			</when>
 			<otherwise >
 				<ee:transform doc:name="Transform Message" doc:id="779c3fe2-9f0f-4add-af5a-d0a743a9445c" >
@@ -43,6 +44,7 @@ payload]]></ee:set-payload>
 						<ee:set-payload ><![CDATA["No data available"]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="170e5926-6dc4-46e4-b0f1-552cc693ecf5" />
 			</otherwise>
 		</choice>
 		<logger level="INFO" doc:name="Logger" doc:id="7e8b1ac2-e8f9-4a57-a133-fe22d2c4b5a8" />
