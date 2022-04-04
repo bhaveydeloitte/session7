@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="26007463-5074-46e2-810c-33712f1d9e09" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="759578a9-2691-42a5-8069-39686a7b8298" />
+	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="14ee7245-b2c1-41fd-b137-0b738e930038" >
+		<s3:basic-connection accessKey="AKIAZPM7FVU2V43MLV6P" secretKey="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" region="US_EAST_2" />
+	</s3:config>
+	<flow name="session-7Flow" doc:id="082c7a68-b4a5-4d0e-9c7d-62d344f16a9f" >
+		<http:listener doc:name="Listener" doc:id="2377f434-6dc2-45de-8ec7-4272de3d80fe" config-ref="HTTP_Listener_config" path="/sql"/>
+		<db:select doc:id="ade3b799-d0b7-4715-9f0d-5071a3acf833" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM sessionseven.tableone where custname = :matchKey_1]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	matchKey_1 : attributes.queryParams.name
+}]]]></db:input-parameters>
+		</db:select>
+		<choice doc:name="Choice" doc:id="76d061d6-98cf-4452-8631-f52465c4a02f" >
+			<when expression="#[sizeOf(payload)&gt;0]">
+				<ee:transform doc:name="Transform Message" doc:id="9771f2c6-3ef6-4221-bd9a-d3f58beac230">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				<file:write doc:name="Write" doc:id="ffda4233-7013-4ed5-af5f-888dc15950c7" config-ref="File_Config" path="C:\Users\BHAMALHOTRA\AnypointStudio\studio-workspace\session-7\fileTransferPractice\test\sql.txt" mode="APPEND"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="779c3fe2-9f0f-4add-af5a-d0a743a9445c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA["No data available"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="7e8b1ac2-e8f9-4a57-a133-fe22d2c4b5a8" />
+	</flow>
+	<flow name="session-7Flow1" doc:id="3e6eded3-88de-4e98-a357-f25ac811d1a9" >
+		<http:listener doc:name="Listener" doc:id="7213cf8a-f1b7-4c78-9b93-4690d331534e" config-ref="HTTP_Listener_config" path="/sf"/>
+		<ee:transform doc:name="Transform Message" doc:id="db8756d4-763e-41e1-b9ec-3e14bc851bc3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="Create" doc:id="b504ca7e-96a8-48c4-b3fa-a1fce7423f02" config-ref="Salesforce_Config" type="Account"/>
+		<ee:transform doc:name="Transform Message" doc:id="46dc179c-c438-4d85-96db-21814d568809" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="session-7Flow" doc:id="241cc31b-4e94-4167-ab8f-bea4f3816605" >
+		<http:listener doc:name="Listener" doc:id="1932f564-31a3-4b36-b39f-8341a8cc11c7" config-ref="HTTP_Listener_config" path="/aws" />
+		<db:select doc:name="Select" doc:id="00dc8ed9-f552-4ed2-a2ea-4949df020493" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT * FROM sessionseven.tableone where custname = :matchKey_1]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	matchKey_1 : attributes.queryParams.name
+}]]]></db:input-parameters>
+		</db:select>
+		<choice doc:name="Choice" doc:id="5e4974b7-371c-4442-b82b-a3a635038744" >
+			<when expression="#[sizeOf(payload)&gt;0]" >
+				<ee:transform doc:name="Transform Message" doc:id="0052a921-558d-41f9-9b40-df3af9978cb2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="5c022788-e0ff-4f02-b924-ef67948b5540" >
+					<ee:message >
+						<ee:set-payload ><![CDATA["No data available"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="c9060182-50c5-4264-a799-f1444e0a474c" />
+	</flow>
+</mule>

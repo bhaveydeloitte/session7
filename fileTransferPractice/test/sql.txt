@@ -1,0 +1,25 @@
+[
+  {
+    "password": "2",
+    "balance": "5",
+    "accno": "7",
+    "custid": 1,
+    "custname": "4"
+  }
+][
+  {
+    "password": "3",
+    "balance": "6",
+    "accno": "8",
+    "custid": 2,
+    "custname": "5"
+  }
+][
+  {
+    "password": "4",
+    "balance": "7",
+    "accno": "9",
+    "custid": 3,
+    "custname": "6"
+  }
+]
