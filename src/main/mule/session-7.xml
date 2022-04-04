@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
-	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp  "
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
 	xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
@@ -35,7 +35,7 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-				<file:write doc:name="Write" doc:id="ffda4233-7013-4ed5-af5f-888dc15950c7" config-ref="File_Config" path="C:\Users\BHAMALHOTRA\AnypointStudio\studio-workspace\session-7\fileTransferPractice\test\sql.txt" mode="APPEND"/>
+				<file:write doc:name="Write_to_local" doc:id="ffda4233-7013-4ed5-af5f-888dc15950c7" config-ref="File_Config" path="C:\Users\BHAMALHOTRA\AnypointStudio\studio-workspace\session-7\fileTransferPractice\test\sql.txt" mode="APPEND"/>
 			</when>
 			<otherwise >
 				<ee:transform doc:name="Transform Message" doc:id="779c3fe2-9f0f-4add-af5a-d0a743a9445c" >
@@ -94,6 +94,6 @@ payload]]></ee:set-payload>
 				</ee:transform>
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="Logger" doc:id="c9060182-50c5-4264-a799-f1444e0a474c" />
+		<logger level="INFO" doc:name="Logger_last" doc:id="c9060182-50c5-4264-a799-f1444e0a474c" />
 	</flow>
 </mule>
